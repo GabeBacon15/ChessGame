@@ -9,7 +9,8 @@ public class Player : NetworkBehaviour
     [SyncVar]
     public int playerNum = 0;
 
-    public string nickname;
+    [SyncVar]
+    private string displayName = "Ummm";
 
     [SerializeField] int turn;
     int pawnPromotionId;
@@ -44,6 +45,21 @@ public class Player : NetworkBehaviour
 
     private static event Action<int> OnTurnUpdate, OnDestroyPiece;
     private static event Action<string> OnChatMessage;
+    private NetworkManagerChess manager;
+    private NetworkManagerChess Manager
+    {
+        get
+        {
+            if (manager != null) { return manager; }
+            return manager = NetworkManager.singleton as NetworkManagerChess;
+        }
+    }
+
+    [Server]
+    public void setDisplayName(string nameToBeSet)
+    {
+        displayName = nameToBeSet;
+    }
 
     public override void OnStartAuthority()
     {
@@ -52,22 +68,16 @@ public class Player : NetworkBehaviour
         chatHistory = string.Empty;
         isChat = false;
         hasSetPieces = false;
-        boardManager = GameObject.Find("BoardManager").GetComponent<BoardManager>();
         pieces = null;
         this.gameObject.name = "Player-" + playerNum;
         currentPiece = null;
-        camObj = GameObject.Find("Camera");
-        cam = camObj.GetComponent<Camera>();
-        camObj.GetComponent<CameraMovment>().move = false;
-        camObj.transform.position = this.transform.position;
-        camObj.transform.rotation = this.transform.rotation;
 
         OnTurnUpdate += HandelTurnUpdate;
         OnDestroyPiece += HandelDestroyPiece;
         OnChatMessage += HandelChatMessage;
 
         turn = 0;
-        chatText.text = nickname;
+        chatText.text = displayName;
         point = new Vector3();
 
         mouseCoord = new Vector3();
@@ -79,6 +89,16 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
+        if (!Manager.inGame) { return; }
+        else
+        {
+            boardManager = GameObject.Find("BoardManager").GetComponent<BoardManager>();
+            camObj = GameObject.Find("Camera");
+            cam = camObj.GetComponent<Camera>();
+            camObj.GetComponent<CameraMovment>().move = false;
+            camObj.transform.position = this.transform.position;
+            camObj.transform.rotation = this.transform.rotation;
+        }
         if (!hasAuthority || waitingForInput) { return; }
         if (newPieceB)
         {
@@ -176,7 +196,7 @@ public class Player : NetworkBehaviour
         if (mouseCoord != mouseClosest)
         {
             mouseCoord = mouseClosest;
-            hoverMesh.GetComponent<MeshFilter>().mesh = createMesh(mouseCoord, .1f);
+            hoverMesh.GetComponent<MeshFilter>().mesh = createMesh(mouseCoord, .2f, .2f);
             hoverMesh.name = "(" + mouseCoord.x + ", " + mouseCoord.y + ", " + mouseCoord.z + ")";
         }
     }
@@ -201,7 +221,7 @@ public class Player : NetworkBehaviour
                         temp.AddComponent<MeshRenderer>().material = possibleMat[((int)pm.x + (int)pm.y) % 2];
                     else
                         temp.AddComponent<MeshRenderer>().material = killMat;
-                    temp.AddComponent<MeshFilter>().mesh = createMesh(pm, .1f);
+                    temp.AddComponent<MeshFilter>().mesh = createMesh(pm, .2f, .2f);
                     possibleMesh.Add(temp);
                 }
                 return p.Value;
@@ -226,49 +246,78 @@ public class Player : NetworkBehaviour
         return false;
     }
 
-    private Mesh createMesh(Vector3 coord, float height)
+    private Mesh createMesh(Vector3 coord, float height, float peak)
     {
-
-        Vector3[] vertecies = new Vector3[8];
-        Vector2[] uv = new Vector2[8];
+        float triHeight = 0.125f;
+        Vector3[] vertecies = new Vector3[14];
+        Vector2[] uv;
         int[] triangles;
 
         Vector3 heightV = new Vector3(0, height, 0);
+        Vector3 peakV = new Vector3(0, peak, 0);
 
-        vertecies[0] = Piece.getCoordInWorldSpace(new Vector3(coord.x - .5f, coord.y + .5f, coord.z)) + heightV;
-        vertecies[1] = Piece.getCoordInWorldSpace(new Vector3(coord.x + .5f, coord.y + .5f, coord.z)) + heightV;
-        vertecies[2] = Piece.getCoordInWorldSpace(new Vector3(coord.x - .5f, coord.y - .5f, coord.z)) + heightV;
-        vertecies[3] = Piece.getCoordInWorldSpace(new Vector3(coord.x + .5f, coord.y - .5f, coord.z)) + heightV;
-        for (int i = 0; i < 4; i++)
-            vertecies[i + 4] = vertecies[i] - heightV;
+        vertecies[0] = Piece.getCoordInWorldSpace(new Vector3(coord.x - .5f, coord.y - .5f, coord.z)) + heightV;
+        vertecies[1] = Piece.getCoordInWorldSpace(new Vector3(coord.x + .5f, coord.y - .5f, coord.z)) + heightV;
+        vertecies[2] = Piece.getCoordInWorldSpace(new Vector3(coord.x + .5f, coord.y + .5f, coord.z)) + heightV;
+        vertecies[3] = Piece.getCoordInWorldSpace(new Vector3(coord.x - .5f, coord.y + .5f, coord.z)) + heightV;
+        vertecies[4] = vertecies[0];
+        for (int i = 0; i < 5; i++)
+            vertecies[i + 5] = vertecies[i] - heightV;
+        for (int i = 10; i < 14; i++)
+            vertecies[i] = Piece.getCoordInWorldSpace(new Vector3(coord.x, coord.y, coord.z)) + heightV + peakV;
 
         triangles = new int[]
         {
-            0, 1, 2,
-            2, 1, 3,
-            4, 0, 6,
-            6, 0, 2,
-            6, 2, 7,
-            7, 2, 3,
-            7, 3, 5,
-            5, 3, 1,
-            5, 1, 4,
-            4, 1, 0,
-            4, 6, 7,
-            5, 4, 7
+            //Front
+            0, 1, 5,
+            1, 6, 5,
+            //Right
+            1, 2, 6,
+            2, 7, 6,
+            //Back
+            2, 3, 7,
+            3, 8, 7,
+            //Left
+            3, 4, 8,
+            4, 9, 8,
+            //Top
+            10, 1, 0,
+            11, 2, 1,
+            12, 3, 2,
+            13, 4, 3
+        };
 
+        uv = new Vector2[]
+        {
+            new Vector2(0.00f, 1 - triHeight),
+            new Vector2(0.25f, 1 - triHeight),
+            new Vector2(0.50f, 1 - triHeight),
+            new Vector2(0.75f, 1 - triHeight),
+            new Vector2(1.00f, 1 - triHeight),
+
+            new Vector2(0.00f, 1f - (height/3) - triHeight),
+            new Vector2(0.25f, 1f - (height/3) - triHeight),
+            new Vector2(0.50f, 1f - (height/3) - triHeight),
+            new Vector2(0.75f, 1f - (height/3) - triHeight),
+            new Vector2(1.00f, 1f - (height/3) - triHeight),
+
+            new Vector2(0.125f, 1f),
+            new Vector2(0.375f, 1f),
+            new Vector2(0.625f, 1f),
+            new Vector2(0.875f, 1f)
         };
 
         Mesh mesh = new Mesh();
         mesh.Clear();
         mesh.vertices = vertecies;
         mesh.triangles = triangles;
+        mesh.uv = uv;
         mesh.Optimize();
         mesh.RecalculateNormals();
 
         return mesh;
-
     }
+
     public Vector3 getClosest(Vector3 position)
     {
         Vector3 shortest = Piece.getBoard2World(new Vector3(0, 0, 0));
@@ -377,7 +426,7 @@ public class Player : NetworkBehaviour
     {
         if (!Input.GetKeyDown(KeyCode.Return) || string.IsNullOrWhiteSpace(message)) { Debug.Log("BREAK");  return; }
         Debug.Log("IN" + message);
-        CmdSendChatMessage(nickname + ": " + message);
+        CmdSendChatMessage(displayName + ": " + message);
         chatInput.text = string.Empty;
     }
     [Command]

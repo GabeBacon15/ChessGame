@@ -34,7 +34,6 @@ public class Piece : NetworkBehaviour
      *     Piece ID = 131: 2nd white bishop
      *     Piece ID = 350: 1st(only) black queen
      */
-    public bool updatedNameOnFull;
     public Vector3 position;
     public List<Vector3> possibleMoves;
     public string pieceName = "";
@@ -42,7 +41,7 @@ public class Piece : NetworkBehaviour
     public int rot;
     public static Vector3[,,] board2World;
     public static Dictionary<Vector3, Vector3> world2Board;
-    [SyncVar]
+    [SyncVar (hook = nameof(OnGetPID))]
     public int pieceID;
     public BoardManager boardManager;
 
@@ -50,20 +49,20 @@ public class Piece : NetworkBehaviour
     {
         boardManager = GameObject.Find("BoardManager").GetComponent<BoardManager>();
         position = getWorld2Board(transform.position);
-        updatedNameOnFull = false;
     }
 
-    private void Update()
+    public override void OnStartClient()
     {
-        if (!hasAuthority) { return; }
-        if (!updatedNameOnFull && boardManager.isFull)
+        if(pieceID != 0)
         {
             CmdSetNameObj(pieceID + "");
-            boardManager.CmdPiecesReadyPlusPlus();
-            updatedNameOnFull = true;
         }
+        base.OnStartClient();
     }
-
+    private void OnGetPID(int oldValue, int newValue)
+    {
+        CmdSetNameObj(pieceID + "");
+    }
 
     public virtual void move(Vector3 position)
     {

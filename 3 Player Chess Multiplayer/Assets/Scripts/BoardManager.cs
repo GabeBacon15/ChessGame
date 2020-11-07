@@ -12,6 +12,12 @@ public class BoardManager : NetworkBehaviour
     [SyncVar]
     public int piecesReady = 0;
 
+    public override void OnStartClient()
+    {
+        this.gameObject.name = "BoardManager";
+        base.OnStartClient();
+    }
+
     [Command(ignoreAuthority = true)]
     public void CmdAddToSpaces(int x, int y, int z, int pieceID)
     {

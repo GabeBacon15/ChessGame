@@ -45,22 +45,11 @@ public class NetworkManagerChessOld : NetworkManager
         {
             NetworkServer.Spawn(myPieces[i], conn);
         }
-        player.GetComponent<Player>().nickname = nickname;
+        //player.GetComponent<Player>().nickname = nickname;
         NetworkServer.AddPlayerForConnection(conn, player);
         if (numPlayers == 3)
         {
             boardManager.isFull = true;
         }
-    }
-
-    public void setNickname()
-    {
-        string nick = GetComponentInChildren<InputField>().text;
-        if (string.IsNullOrWhiteSpace(nick))
-        {
-            nickname = steamName;
-            return;
-        }
-        nickname = nick;
     }
 }
