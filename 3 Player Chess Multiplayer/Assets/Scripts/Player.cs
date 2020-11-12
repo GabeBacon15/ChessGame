@@ -133,8 +133,8 @@ public class Player : NetworkBehaviour
         {
             return;
         }
-        if (boardManager.piecesReady < 48) { return; }
-
+        //if (boardManager.piecesReady < 48) { return; }
+        if(GameObject.Find(playerNum*100 + "") == null && !hasSetPieces) { Debug.Log("Not Found: " + playerNum * 100); return; }
         if (!hasSetPieces)
         {
             pieces = new Dictionary<int, GameObject>();
@@ -494,7 +494,7 @@ public class Player : NetworkBehaviour
         Debug.Log("HELLO");
     }
 
-    [Command]
+    [Command(ignoreAuthority = true)]
     public void CmdSpawnPieces(NetworkConnectionToClient conn = null)
     {
         GameObject[] myPieces = new GameObject[16];
@@ -521,6 +521,7 @@ public class Player : NetworkBehaviour
         {
             myPieces[8 + j] = Instantiate(piecesList[index].getPrefab("pawn"), Piece.getBoard2World(new Vector3(j, 1, index)), Quaternion.Euler(0, 120 * index, 0));
         }
+        pieces = new Dictionary<int, GameObject>();
         for (int j = 0; j < myPieces.Length; j++)
         {
             NetworkServer.Spawn(myPieces[j], conn);

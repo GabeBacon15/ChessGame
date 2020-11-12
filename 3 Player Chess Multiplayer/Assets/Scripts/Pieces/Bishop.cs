@@ -85,7 +85,7 @@ public class Bishop : Piece
                         else
                             tempColor = "";
                     }
-
+                    Debug.Log(tempColor + " | " + pos);
                     while (pos.x >= 0 && pos.x <= 7 && pos.y >= 0 && (spaces[(int)pos.x, (int)pos.y, (int)pos.z] == 0 || !tempColor.Equals(color)))
                     {
                         clone = pos;
@@ -112,10 +112,14 @@ public class Bishop : Piece
                         else
                             tempColor = "";
                     }
+                    Debug.Log(tempColor + " | " + pos);
                 }
-                clone = pos;
-                moves.Add(clone);
-                if (!tempColor.Equals(color) && !tempColor.Equals(""))
+                if (!tempColor.Equals(color))
+                {
+                    clone = pos;
+                    moves.Add(clone);
+                }
+                if (!tempColor.Equals(""))
                     break;
                 pos = getDiagonalMove(pos, directions[i], ref rot);
 
