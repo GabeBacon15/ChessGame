@@ -7,13 +7,16 @@ public class BoardManager : NetworkBehaviour
 {
 
     public SyncListInt spaces = new SyncListInt();
-    [SyncVar]
-    public bool isFull = false;
+    //[SyncVar]
+    //public bool isFull = false;
+    [SyncVar(hook = nameof(CmdOnPlayerReady))]
+    public int numPlayersReady = 0;
     [SyncVar]
     public int piecesReady = 0;
 
     public override void OnStartClient()
     {
+        DontDestroyOnLoad(this);
         this.gameObject.name = "BoardManager";
         base.OnStartClient();
     }
@@ -65,6 +68,21 @@ public class BoardManager : NetworkBehaviour
             {
                 spaces[i] = 0;
             }
+        }
+    }
+
+    [Command(ignoreAuthority = true)]
+    public void CmdAddPlayerReady()
+    {
+        numPlayersReady++;
+    }
+
+    [Command(ignoreAuthority = true)]
+    private void CmdOnPlayerReady(int oldValue, int newValue)
+    {
+        if(numPlayersReady == 3)
+        {
+            //isFull = true;
         }
     }
     [Command(ignoreAuthority = true)]

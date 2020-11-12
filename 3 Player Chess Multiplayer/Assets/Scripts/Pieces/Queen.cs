@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class Queen : Piece
 {
@@ -8,14 +9,14 @@ public class Queen : Piece
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        setPID();
+        CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
     }
 
     public override void getPossibleMoves()
     {
-        int[,,] spaces = boardManager.getSpaces();
+        int[,,] spaces = BoardMan.getSpaces();
         List<Vector3> moves = getStraightMoves(spaces);
         List<Vector3> dmoves = getDiagonalMoves(spaces);
         moves.AddRange(dmoves);
@@ -182,25 +183,27 @@ public class Queen : Piece
         return moves;
     }
 
-    private void setPID()
+    [Command]
+    private void CmdSetPID()
     {
-        pieceID = 0;
+        int tempId = 0;
         switch (color)
         {
             case "white":
-                pieceID += 150 + numq;
+                tempId += 150 + numq;
                 break;
             case "red":
-                pieceID += 250 + numq;
+                tempId += 250 + numq;
                 break;
             case "black":
-                pieceID += 350 + numq;
+                tempId += 350 + numq;
                 break;
             default:
-                pieceID += 150 + numq;
+                tempId += 150 + numq;
                 break;
         }
         numq++;
+        pieceID = tempId;
     }
 
 }

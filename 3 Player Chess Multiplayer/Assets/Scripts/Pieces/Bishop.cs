@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class Bishop : Piece
 {
@@ -8,9 +9,9 @@ public class Bishop : Piece
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        setPID();
+        CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
     }
 
     public override void getPossibleMoves()
@@ -35,7 +36,7 @@ public class Bishop : Piece
 
         for (int i = 0; i < 4; i++)
         {
-            int[,,] spaces = boardManager.getSpaces();
+            int[,,] spaces = BoardMan.getSpaces();
             int bw;
             if (i < 2)
             {
@@ -132,25 +133,28 @@ public class Bishop : Piece
         possibleMoves = moves;
     }
 
-    private void setPID()
+
+
+    private void CmdSetPID()
     {
-        pieceID = 0;
+        int tempId = 0;
         switch (color)
         {
             case "white":
-                pieceID += 130 + numb;
+                tempId += 130 + numb;
                 break;
             case "red":
-                pieceID += 230 + numb;
+                tempId += 230 + numb;
                 break;
             case "black":
-                pieceID += 330 + numb;
+                tempId += 330 + numb;
                 break;
             default:
-                pieceID += 130 + numb;
+                tempId += 130 + numb;
                 break;
         }
         numb++;
+        pieceID = tempId;
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class Pawn : Piece
 {
@@ -10,8 +11,8 @@ public class Pawn : Piece
     {
         hasMoved = false;
         base.OnStartAuthority();
-        setPID();
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        CmdSetPID();
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
     }
 
     public override void move(Vector3 position)
@@ -26,7 +27,7 @@ public class Pawn : Piece
 
     public override void getPossibleMoves()
     {
-        int[,,] spaces = boardManager.getSpaces();
+        int[,,] spaces = BoardMan.getSpaces();
         List<Vector3> moves = new List<Vector3>();
         Vector3 pos = position;
         Vector3 clone;
@@ -101,25 +102,27 @@ public class Pawn : Piece
         possibleMoves = moves;
     }
 
-    private void setPID()
+    [Command]
+    private void CmdSetPID()
     {
-        pieceID = 0;
+        int tempId = 0;
         switch (color)
         {
             case "white":
-                pieceID += 100 + numpw;
+                tempId += 100 + numpw;
                 break;
             case "red":
-                pieceID += 200 + numpw;
+                tempId += 200 + numpw;
                 break;
             case "black":
-                pieceID += 300 + numpw;
+                tempId += 300 + numpw;
                 break;
             default:
-                pieceID += 100 + numpw;
+                tempId += 100 + numpw;
                 break;
         }
         numpw++;
+        pieceID = tempId;
     }
 
 }

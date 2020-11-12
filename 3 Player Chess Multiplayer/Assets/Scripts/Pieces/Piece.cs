@@ -43,11 +43,21 @@ public class Piece : NetworkBehaviour
     public static Dictionary<Vector3, Vector3> world2Board;
     [SyncVar (hook = nameof(OnGetPID))]
     public int pieceID;
-    public BoardManager boardManager;
+    [SyncVar]
+    public bool hasBeenSet = false;
+
+    public BoardManager boardMan;
+    public BoardManager BoardMan
+    {
+        get
+        {
+            if (boardMan != null) { return boardMan; }
+            return boardMan = GameObject.Find("BoardManager").GetComponent<BoardManager>();
+        }
+    }
 
     public override void OnStartAuthority()
     {
-        boardManager = GameObject.Find("BoardManager").GetComponent<BoardManager>();
         position = getWorld2Board(transform.position);
     }
 
@@ -62,13 +72,18 @@ public class Piece : NetworkBehaviour
     private void OnGetPID(int oldValue, int newValue)
     {
         CmdSetNameObj(pieceID + "");
+        if (!hasBeenSet)
+        {
+            BoardMan.CmdPiecesReadyPlusPlus();
+            CmdSetHasBeenSet(true);
+        }
     }
 
     public virtual void move(Vector3 position)
     {
-        boardManager.CmdAddToSpaces((int)this.position.x, (int)this.position.y, (int)this.position.z, 0);
+        BoardMan.CmdAddToSpaces((int)this.position.x, (int)this.position.y, (int)this.position.z, 0);
         this.position = position;
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
         transform.position = getBoard2World(position);
     }
 
@@ -370,7 +385,7 @@ public class Piece : NetworkBehaviour
     }
 
 
-    [Command]
+    [Command(ignoreAuthority = true)]
     public void CmdSetNameObj(string n)
     {
         RpcSetNameObj(n);
@@ -379,5 +394,10 @@ public class Piece : NetworkBehaviour
     public void RpcSetNameObj(string n)
     {
         this.gameObject.name = n;
+    }
+    [Command(ignoreAuthority = true)]
+    public void CmdSetHasBeenSet(bool value)
+    {
+        hasBeenSet = value;
     }
 }

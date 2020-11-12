@@ -10,14 +10,14 @@ public class King : Piece
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        setPID();
+        CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
     }
 
     public override void getPossibleMoves()
     {
-        int[,,] spaces = boardManager.getSpaces();
+        int[,,] spaces = BoardMan.getSpaces();
         Vector2[][] directions = new Vector2[4][];
         directions[0] = new Vector2[] { new Vector2(0, 1), new Vector2(1, 0) };
         directions[1] = new Vector2[] { new Vector2(1, 0), new Vector2(0, -1) };
@@ -98,26 +98,27 @@ public class King : Piece
 
     }
 
-
-    private void setPID()
+    [Command]
+    private void CmdSetPID()
     {
-        pieceID = 0;
+        int tempId = 0;
         switch (color)
         {
             case "white":
-                pieceID += 140 + numki;
+                tempId += 140 + numki;
                 break;
             case "red":
-                pieceID += 240 + numki;
+                tempId += 240 + numki;
                 break;
             case "black":
-                pieceID += 340 + numki;
+                tempId += 340 + numki;
                 break;
             default:
-                pieceID += 140 + numki;
+                tempId += 140 + numki;
                 break;
         }
         numki++;
+        pieceID = tempId;
     }
 
 }

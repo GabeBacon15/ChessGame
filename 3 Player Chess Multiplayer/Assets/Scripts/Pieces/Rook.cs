@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class Rook : Piece
 {
@@ -8,14 +9,14 @@ public class Rook : Piece
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        setPID();
+        CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
     }
 
     public override void getPossibleMoves()
     {
-        int[,,] spaces = boardManager.getSpaces();
+        int[,,] spaces = BoardMan.getSpaces();
         List<Vector3> moves = new List<Vector3>();
         int tempRot = rot;
         Vector2 dir = new Vector2(0, 1);
@@ -56,25 +57,27 @@ public class Rook : Piece
         possibleMoves = moves;
     }
 
-    private void setPID()
+    [Command]
+    private void CmdSetPID()
     {
-        pieceID = 0;
+        int tempId = 0;
         switch (color)
         {
             case "white":
-                pieceID += 110 + numr;
+                tempId += 110 + numr;
                 break;
             case "red":
-                pieceID += 210 + numr;
+                tempId += 210 + numr;
                 break;
             case "black":
-                pieceID += 310 + numr;
+                tempId += 310 + numr;
                 break;
             default:
-                pieceID += 110 + numr;
+                tempId += 110 + numr;
                 break;
         }
         numr++;
+        pieceID = tempId;
     }
 
 }

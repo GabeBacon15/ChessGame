@@ -303,11 +303,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 17016}
     - Class: 114
-      Script: {instanceID: 17126}
+      Script: {instanceID: 17124}
     - Class: 114
-      Script: {instanceID: 17208}
+      Script: {instanceID: 17206}
     - Class: 114
-      Script: {instanceID: 17214}
+      Script: {instanceID: 17212}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -585,7 +585,7 @@ ScriptsOnlyBuild:
     className: VFXRigidBodyCollisionEventBinder
   - hash:
       serializedVersion: 2
-      Hash: 1fa3ab9508070bc844761b6495ea3162
+      Hash: cff3b970ba6688a2480c2de82521f211
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -729,7 +729,7 @@ ScriptsOnlyBuild:
     className: WhiteBalance
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Rook
@@ -891,7 +891,7 @@ ScriptsOnlyBuild:
     className: Player
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: King
@@ -987,7 +987,7 @@ ScriptsOnlyBuild:
     className: Tank
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Piece
@@ -999,7 +999,7 @@ ScriptsOnlyBuild:
     className: NetworkRigidbody
   - hash:
       serializedVersion: 2
-      Hash: bab353244bf83094717a20511b6914d8
+      Hash: c7d78aea9e906e987a132d0c9e9ce401
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BoardManager
@@ -1089,7 +1089,7 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
-      Hash: 2a379d84aa9f7602e60bcc9f7fb01b09
+      Hash: 47ecb70e01e343ceaebef50215c2f3a9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: NetworkManagerChess
@@ -1179,7 +1179,7 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Knight
@@ -1479,7 +1479,7 @@ ScriptsOnlyBuild:
     className: NetworkTransformChild
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Pawn
@@ -1803,7 +1803,7 @@ ScriptsOnlyBuild:
     className: NetworkDiscovery
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Bishop
@@ -1833,7 +1833,7 @@ ScriptsOnlyBuild:
     className: NetworkTransformChild
   - hash:
       serializedVersion: 2
-      Hash: a8af05df73a93e865aa83ba406dedf46
+      Hash: 7ffa0c0ff3149a221a212dec04c17f0e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Queen
@@ -1969,12 +1969,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualEffectGraph.Runtime.dll
     namespaceName: UnityEngine.VFX.Utility
     className: VFXPropertyBinder
-  - hash:
-      serializedVersion: 2
-      Hash: e379461d66300fc98c8b1bf6874af77d
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Avoidance
   - hash:
       serializedVersion: 2
       Hash: 7072231382eb3c4871b3dd75ad0227e1

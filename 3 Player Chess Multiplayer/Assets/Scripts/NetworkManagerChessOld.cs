@@ -49,7 +49,7 @@ public class NetworkManagerChessOld : NetworkManager
         NetworkServer.AddPlayerForConnection(conn, player);
         if (numPlayers == 3)
         {
-            boardManager.isFull = true;
+            //boardManager.isFull = true;
         }
     }
 }

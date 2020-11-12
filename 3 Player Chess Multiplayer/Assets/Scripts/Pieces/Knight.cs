@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
 public class Knight : Piece
 {
@@ -8,13 +9,13 @@ public class Knight : Piece
     public override void OnStartAuthority()
     {
         base.OnStartAuthority();
-        setPID();
-        boardManager.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+        CmdSetPID();
+        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
     }
 
     public override void getPossibleMoves()
     {
-        int[,,] spaces = boardManager.getSpaces();
+        int[,,] spaces = BoardMan.getSpaces();
         List<Vector3> moves = new List<Vector3>();
         Vector3 pos = position;
         Vector3 clone;
@@ -97,25 +98,27 @@ public class Knight : Piece
 
     }
 
-    private void setPID()
+    [Command]
+    private void CmdSetPID()
     {
-        pieceID = 0;
+        int tempId = 0;
         switch (color)
         {
             case "white":
-                pieceID += 120 + numkn;
+                tempId += 120 + numkn;
                 break;
             case "red":
-                pieceID += 220 + numkn;
+                tempId += 220 + numkn;
                 break;
             case "black":
-                pieceID += 320 + numkn;
+                tempId += 320 + numkn;
                 break;
             default:
-                pieceID += 120 + numkn;
+                tempId += 120 + numkn;
                 break;
         }
         numkn++;
+        pieceID = tempId;
     }
 
 }

@@ -17,6 +17,7 @@ public class Player : NetworkBehaviour
     Vector3 pawnPromotionPos;
     public int myTurn;
     public Dictionary<int, GameObject> pieces;
+    public PieceDictionary[] piecesList = null;
     public Camera cam;
 
     private bool hasSetPieces, isChat, newPieceB, waitingForInput;
@@ -61,8 +62,19 @@ public class Player : NetworkBehaviour
         displayName = nameToBeSet;
     }
 
+    public void setupCam()
+    {
+        camObj = GameObject.Find("Camera");
+        cam = camObj.GetComponent<Camera>();
+        camObj.transform.position = this.transform.position;
+        camObj.transform.rotation = this.transform.rotation;
+        boardManager = GameObject.Find("BoardManager").GetComponent<BoardManager>();
+
+    }
+
     public override void OnStartAuthority()
     {
+
         waitingForInput = false;
         newPieceB = false;
         chatHistory = string.Empty;
@@ -82,23 +94,17 @@ public class Player : NetworkBehaviour
 
         mouseCoord = new Vector3();
         possibleMesh = new List<GameObject>();
-        hoverMesh = new GameObject("blank");
-        hoverMesh.AddComponent<MeshRenderer>().material = hoverMat;
-        hoverMesh.AddComponent<MeshFilter>();
+    }
+
+    public override void OnStartClient()
+    {
+        DontDestroyOnLoad(this);
+        base.OnStartClient();
     }
 
     private void Update()
     {
-        if (!Manager.inGame) { return; }
-        else
-        {
-            boardManager = GameObject.Find("BoardManager").GetComponent<BoardManager>();
-            camObj = GameObject.Find("Camera");
-            cam = camObj.GetComponent<Camera>();
-            camObj.GetComponent<CameraMovment>().move = false;
-            camObj.transform.position = this.transform.position;
-            camObj.transform.rotation = this.transform.rotation;
-        }
+        if(boardManager == null) { return; }
         if (!hasAuthority || waitingForInput) { return; }
         if (newPieceB)
         {
@@ -152,7 +158,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
-                if (isValidMove(mouseCoord) && (turn == playerNum - 1 || true))
+                if (isValidMove(mouseCoord) && (turn == playerNum - 1 || true))//cheat
                 {
                     if (boardManager.getSpaces()[(int)mouseCoord.x, (int)mouseCoord.y, (int)mouseCoord.z] != 0)
                     {
@@ -185,6 +191,12 @@ public class Player : NetworkBehaviour
 
     private void updatePlayerPoint()
     {
+        if(hoverMesh == null)
+        {
+            hoverMesh = new GameObject("blank");
+            hoverMesh.AddComponent<MeshRenderer>().material = hoverMat;
+            hoverMesh.AddComponent<MeshFilter>();
+        }
         Ray clickRay = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -480,5 +492,38 @@ public class Player : NetworkBehaviour
     public void CmdDebug()
     {
         Debug.Log("HELLO");
+    }
+
+    [Command]
+    public void CmdSpawnPieces(NetworkConnectionToClient conn = null)
+    {
+        GameObject[] myPieces = new GameObject[16];
+
+        int index = playerNum - 1;
+
+        myPieces[0] = Instantiate(piecesList[index].getPrefab("rook"), Piece.getBoard2World(new Vector3(0, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        myPieces[1] = Instantiate(piecesList[index].getPrefab("knight"), Piece.getBoard2World(new Vector3(1, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        myPieces[2] = Instantiate(piecesList[index].getPrefab("bishop"), Piece.getBoard2World(new Vector3(2, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        if (index == 2)
+        {
+            myPieces[3] = Instantiate(piecesList[index].getPrefab("king"), Piece.getBoard2World(new Vector3(3, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+            myPieces[4] = Instantiate(piecesList[index].getPrefab("queen"), Piece.getBoard2World(new Vector3(4, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        }
+        else
+        {
+            myPieces[4] = Instantiate(piecesList[index].getPrefab("king"), Piece.getBoard2World(new Vector3(4, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+            myPieces[3] = Instantiate(piecesList[index].getPrefab("queen"), Piece.getBoard2World(new Vector3(3, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        }
+        myPieces[5] = Instantiate(piecesList[index].getPrefab("bishop"), Piece.getBoard2World(new Vector3(5, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        myPieces[6] = Instantiate(piecesList[index].getPrefab("knight"), Piece.getBoard2World(new Vector3(6, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        myPieces[7] = Instantiate(piecesList[index].getPrefab("rook"), Piece.getBoard2World(new Vector3(7, 0, index)), Quaternion.Euler(0, 120 * index, 0));
+        for (int j = 0; j < 8; j++)
+        {
+            myPieces[8 + j] = Instantiate(piecesList[index].getPrefab("pawn"), Piece.getBoard2World(new Vector3(j, 1, index)), Quaternion.Euler(0, 120 * index, 0));
+        }
+        for (int j = 0; j < myPieces.Length; j++)
+        {
+            NetworkServer.Spawn(myPieces[j], conn);
+        }
     }
 }
