@@ -11,7 +11,12 @@ public class Rook : Piece
         base.OnStartAuthority();
         CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+    }
+
+    public override void OnStartClient()
+    {
+        pieceName = "rook";
+        base.OnStartClient();
     }
 
     public override void getPossibleMoves()

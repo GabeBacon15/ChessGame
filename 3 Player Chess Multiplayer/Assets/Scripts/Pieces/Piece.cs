@@ -46,8 +46,8 @@ public class Piece : NetworkBehaviour
     [SyncVar]
     public bool hasBeenSet = false;
 
-    public BoardManager boardMan;
-    public BoardManager BoardMan
+    public static BoardManager boardMan;
+    public static BoardManager BoardMan
     {
         get
         {
@@ -72,11 +72,12 @@ public class Piece : NetworkBehaviour
     private void OnGetPID(int oldValue, int newValue)
     {
         CmdSetNameObj(pieceID + "");
-        if (!hasBeenSet)
+        if (!hasBeenSet && hasAuthority)
         {
+            BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
             BoardMan.CmdPiecesReadyPlusPlus();
-            CmdSetHasBeenSet(true);
         }
+        CmdSetHasBeenSet(true);
     }
 
     public virtual void move(Vector3 position)

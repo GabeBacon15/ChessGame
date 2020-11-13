@@ -137,7 +137,7 @@ public class NetworkManagerChess : NetworkManager
         Debug.Log(gameScene);
         if (SceneManager.GetActiveScene().path == menuScene)
         {
-            //if(!isReadyToStart()) { return; }//HEEEEEERRRRREEEE
+            if(!isReadyToStart()) { return; }//HEEEEEERRRRREEEE
 
             ServerChangeScene("GameScene");
         }
@@ -172,9 +172,19 @@ public class NetworkManagerChess : NetworkManager
         base.ServerChangeScene(newSceneName);
     }
 
+    private bool success = true;
+
+    private void spawnPieces(NetworkConnectionToClient conn)
+    {
+        if(conn.identity.GetComponent<Player>().playerNum == 0)
+        {
+            
+        }
+        conn.identity.GetComponent<Player>().CmdSpawnPieces(conn);
+    }
+
     public override void OnClientSceneChanged(NetworkConnection conn)
     {
-        conn.identity.GetComponent<Player>().piecesList = pieces;
         conn.identity.GetComponent<Player>().setupCam();
         conn.identity.GetComponent<Player>().CmdSpawnPieces(conn.identity.connectionToClient);
        

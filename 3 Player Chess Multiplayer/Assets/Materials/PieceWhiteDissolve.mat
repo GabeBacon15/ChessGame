@@ -288,7 +288,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_3B4D2425: {r: 1, g: 0.9372549, b: 0.8156863, a: 0}
-    - Color_946B6467: {r: 1048576, g: 0, b: 616809.44, a: 1}
+    - Color_946B6467: {r: 1048575.25, g: 0, b: 616809.44, a: 1}
     - _BaseColor: {r: 1, g: 0.9372549, b: 0.8156863, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 0.9372549, b: 0.8156863, a: 1}

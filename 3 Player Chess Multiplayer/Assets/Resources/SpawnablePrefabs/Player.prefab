@@ -1153,6 +1153,7 @@ Transform:
   m_Children:
   - {fileID: 30523457836943931}
   - {fileID: 2380231938203121449}
+  - {fileID: 141388083253491825}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1187,9 +1188,66 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerNum: 0
-  nickname: 
   turn: 0
   myTurn: 0
+  piecesList:
+  - pieces:
+    - name: pawn
+      prefab: {fileID: 5577275560980082689, guid: 3fe046c8b27fed94f83645b3669b35ac,
+        type: 3}
+    - name: rook
+      prefab: {fileID: 4424120154583394936, guid: d7cd27ca339e818439e0edcee9530c81,
+        type: 3}
+    - name: knight
+      prefab: {fileID: 9155003931590558874, guid: 1d12c17c64b096f4b8c27a3ee4939905,
+        type: 3}
+    - name: bishop
+      prefab: {fileID: 9016033574391722218, guid: 27c4b2a740589c448a7c035a25bcbbca,
+        type: 3}
+    - name: king
+      prefab: {fileID: 5394820956749992399, guid: 18bdc61f0ceb8084084eac797bce49a8,
+        type: 3}
+    - name: queen
+      prefab: {fileID: 5471162637854400936, guid: 048369aaa25a8b04eb91268faf75f378,
+        type: 3}
+  - pieces:
+    - name: pawn
+      prefab: {fileID: 5577275560980082689, guid: 2c04c8b7afb8ce744bdf4f6521a8e8ce,
+        type: 3}
+    - name: rook
+      prefab: {fileID: 4424120154583394936, guid: 5b1ccdb7b7426c74196cf78b3b2fa42c,
+        type: 3}
+    - name: knight
+      prefab: {fileID: 9155003931590558874, guid: 16b394162f859c6408107c8de0fde9bb,
+        type: 3}
+    - name: bishop
+      prefab: {fileID: 9016033574391722218, guid: 67b758c2217b04547b11747668bf790f,
+        type: 3}
+    - name: king
+      prefab: {fileID: 5394820956749992399, guid: 51f9380852787124b81e34437fd23c6c,
+        type: 3}
+    - name: queen
+      prefab: {fileID: 5471162637854400936, guid: 4501e071d4d65f8479de2ffabf10559d,
+        type: 3}
+  - pieces:
+    - name: pawn
+      prefab: {fileID: 5577275560980082689, guid: ce4ffc3d87d7a044fab523a04dc99c2a,
+        type: 3}
+    - name: rook
+      prefab: {fileID: 4424120154583394936, guid: b14580e4d08973d458a99212c5e34475,
+        type: 3}
+    - name: knight
+      prefab: {fileID: 9155003931590558874, guid: 2741d930f65af9042963fe074e6952bb,
+        type: 3}
+    - name: bishop
+      prefab: {fileID: 9016033574391722218, guid: f844e9e74676b064c861223f13f7f336,
+        type: 3}
+    - name: king
+      prefab: {fileID: 5394820956749992399, guid: 234fff33acda1f04491358ee298c4389,
+        type: 3}
+    - name: queen
+      prefab: {fileID: 5471162637854400936, guid: 92d00f5fe4ae99246aaa17efcee344fc,
+        type: 3}
   cam: {fileID: 0}
   displayUI: {fileID: 8517292289397272226}
   promotionUI: {fileID: 4855204523068135901}
@@ -1493,6 +1551,72 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: NO MESSAGES
+--- !u!1 &7930725285019833204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 141388083253491825}
+  - component: {fileID: 9193087022973665285}
+  - component: {fileID: 729903645228961274}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &141388083253491825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930725285019833204}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4163679224452514500}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9193087022973665285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930725285019833204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!114 &729903645228961274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930725285019833204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!1 &7975679618973049957
 GameObject:
   m_ObjectHideFlags: 0

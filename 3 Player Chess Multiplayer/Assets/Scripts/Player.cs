@@ -104,8 +104,7 @@ public class Player : NetworkBehaviour
 
     private void Update()
     {
-        if(boardManager == null) { return; }
-        if (!hasAuthority || waitingForInput) { return; }
+        if (!hasAuthority || waitingForInput || boardManager == null) { return; }
         if (newPieceB)
         {
             newPiece = GameObject.Find(lookingForPromotionID);
@@ -113,6 +112,7 @@ public class Player : NetworkBehaviour
             {
                 pieces.Add(newPiece.GetComponent<Piece>().pieceID, newPiece);
                 newPieceB = false;
+                hoverMesh.SetActive(true);
             }
         }
         if (Input.GetKeyDown(KeyCode.Quote))
@@ -134,14 +134,19 @@ public class Player : NetworkBehaviour
             return;
         }
         //if (boardManager.piecesReady < 48) { return; }
-        if(GameObject.Find(playerNum*100 + "") == null && !hasSetPieces) { Debug.Log("Not Found: " + playerNum * 100); return; }
+        if(playerNum == 0) { return; }
+        if(boardManager.spaces.Count < 96) { return; }
+        if((GameObject.Find((playerNum * 100 + 7) + "") == null && !hasSetPieces) || (boardManager.spaces[7 + 8 * 1 + 32 * (playerNum-1)] == 0) && !hasSetPieces) { Debug.Log("Not Found: " + (playerNum * 100 + 7)); return; }
         if (!hasSetPieces)
         {
+            Debug.Log(boardManager.spaces.Count + " |Yeet| " + boardManager.spaces[7 + 8 * 1 + 32 * (playerNum - 1)] + ", " + (playerNum-1));
             pieces = new Dictionary<int, GameObject>();
             foreach (int i in boardManager.spaces)
             {
+                Debug.Log(i);
                 if (i / 100 == playerNum)
                 {
+                    Debug.Log("Here Yeet: " + i);
                     pieces.Add(i, GameObject.Find(i + ""));
                 }
             }
@@ -158,7 +163,7 @@ public class Player : NetworkBehaviour
             }
             else
             {
-                if (isValidMove(mouseCoord) && (turn == playerNum - 1 || true))//cheat
+                if (isValidMove(mouseCoord) && (turn == playerNum - 1 || false))//cheat: false = turns, true = freeforall
                 {
                     if (boardManager.getSpaces()[(int)mouseCoord.x, (int)mouseCoord.y, (int)mouseCoord.z] != 0)
                     {
@@ -172,6 +177,8 @@ public class Player : NetworkBehaviour
                         pawnPromotionId =  currentPiece.GetComponent<Piece>().pieceID;
                         pawnPromotionPos = mouseCoord;
                         promotionUI.SetActive(true);
+                        waitingForInput = true;
+                        hoverMesh.SetActive(false);
                     }
                     foreach (GameObject go in possibleMesh)
                     {
@@ -417,7 +424,7 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdAddPiece(string name, int color, Vector3 pos)
     {
-        GameObject piece = Instantiate(promotion[color-1].getPrefab(name), Piece.getBoard2World(pos), Quaternion.Euler(0, 120 * color-1, 0));
+        GameObject piece = Instantiate(promotion[color-1].getPrefab(name), Piece.getBoard2World(pos), Quaternion.Euler(0, 120 * (color-1), 0));
         NetworkServer.Spawn(piece, this.gameObject);
     }
 
@@ -497,9 +504,18 @@ public class Player : NetworkBehaviour
     [Command(ignoreAuthority = true)]
     public void CmdSpawnPieces(NetworkConnectionToClient conn = null)
     {
+        Pawn.numpw = 0;
+        Rook.numr = 0;
+        Knight.numkn = 0;
+        Bishop.numb = 0;
+        King.numki = 0;
+        Queen.numq = 0;
+
+        Debug.Log(displayName + ": " + playerNum);
         GameObject[] myPieces = new GameObject[16];
 
         int index = playerNum - 1;
+        Debug.Log(index + ": " + piecesList.Length);
 
         myPieces[0] = Instantiate(piecesList[index].getPrefab("rook"), Piece.getBoard2World(new Vector3(0, 0, index)), Quaternion.Euler(0, 120 * index, 0));
         myPieces[1] = Instantiate(piecesList[index].getPrefab("knight"), Piece.getBoard2World(new Vector3(1, 0, index)), Quaternion.Euler(0, 120 * index, 0));
@@ -521,7 +537,6 @@ public class Player : NetworkBehaviour
         {
             myPieces[8 + j] = Instantiate(piecesList[index].getPrefab("pawn"), Piece.getBoard2World(new Vector3(j, 1, index)), Quaternion.Euler(0, 120 * index, 0));
         }
-        pieces = new Dictionary<int, GameObject>();
         for (int j = 0; j < myPieces.Length; j++)
         {
             NetworkServer.Spawn(myPieces[j], conn);

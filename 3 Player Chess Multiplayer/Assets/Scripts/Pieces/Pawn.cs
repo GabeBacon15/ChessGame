@@ -12,7 +12,12 @@ public class Pawn : Piece
         hasMoved = false;
         base.OnStartAuthority();
         CmdSetPID();
-        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+    }
+
+    public override void OnStartClient()
+    {
+        pieceName = "pawn";
+        base.OnStartClient();
     }
 
     public override void move(Vector3 position)

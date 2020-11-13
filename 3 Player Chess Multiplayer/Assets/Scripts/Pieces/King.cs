@@ -12,7 +12,11 @@ public class King : Piece
         base.OnStartAuthority();
         CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+    }
+    public override void OnStartClient()
+    {
+        pieceName = "king";
+        base.OnStartClient();
     }
 
     public override void getPossibleMoves()

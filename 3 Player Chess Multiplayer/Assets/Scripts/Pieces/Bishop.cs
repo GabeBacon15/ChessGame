@@ -11,7 +11,11 @@ public class Bishop : Piece
         base.OnStartAuthority();
         CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+    }
+    public override void OnStartClient()
+    {
+        pieceName = "bishop";
+        base.OnStartClient();
     }
 
     public override void getPossibleMoves()
@@ -112,7 +116,6 @@ public class Bishop : Piece
                         else
                             tempColor = "";
                     }
-                    Debug.Log(tempColor + " | " + pos);
                 }
                 if (!tempColor.Equals(color))
                 {
@@ -138,7 +141,7 @@ public class Bishop : Piece
     }
 
 
-
+    [Command]
     private void CmdSetPID()
     {
         int tempId = 0;

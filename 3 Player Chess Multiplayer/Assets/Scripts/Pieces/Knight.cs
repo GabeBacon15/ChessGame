@@ -10,7 +10,11 @@ public class Knight : Piece
     {
         base.OnStartAuthority();
         CmdSetPID();
-        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+    }
+    public override void OnStartClient()
+    {
+        pieceName = "knight";
+        base.OnStartClient();
     }
 
     public override void getPossibleMoves()

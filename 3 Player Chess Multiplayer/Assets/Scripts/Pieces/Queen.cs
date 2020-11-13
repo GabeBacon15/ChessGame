@@ -11,7 +11,11 @@ public class Queen : Piece
         base.OnStartAuthority();
         CmdSetPID();
         //CmdSetNameObj(pieceID + "");
-        BoardMan.CmdAddToSpaces((int)position.x, (int)position.y, (int)position.z, pieceID);
+    }
+    public override void OnStartClient()
+    {
+        pieceName = "queen";
+        base.OnStartClient();
     }
 
     public override void getPossibleMoves()
@@ -163,9 +167,12 @@ public class Queen : Piece
                             tempColor = "";
                     }
                 }
-                clone = pos;
-                moves.Add(clone);
-                if (!tempColor.Equals(color) && !tempColor.Equals(""))
+                if (!tempColor.Equals(color))
+                {
+                    clone = pos;
+                    moves.Add(clone);
+                }
+                if (!tempColor.Equals(""))
                     break;
                 pos = getDiagonalMove(pos, directions[i], ref rot);
 

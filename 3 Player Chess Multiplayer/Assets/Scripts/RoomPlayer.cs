@@ -44,7 +44,7 @@ public class RoomPlayer : NetworkBehaviour
         {
             isReady = true;
             start.gameObject.SetActive(true);
-            start.GetComponent<Button>().interactable = true;//HEEEEEERRRRREEEE
+            start.GetComponent<Button>().interactable = false;//HEEEEEERRRRREEEE
         }
         else
         {
@@ -213,7 +213,7 @@ public class RoomPlayer : NetworkBehaviour
     [Command]
     public void CmdStartGame()
     {
-        //if (Manager.RoomPlayers[0].connectionToClient != connectionToClient) { return; }//HEEEEEERRRRREEEE
+        if (Manager.RoomPlayers[0].connectionToClient != connectionToClient) { return; }//HEEEEEERRRRREEEE
 
         Manager.StartGame();
     }
