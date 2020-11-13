@@ -27,10 +27,8 @@ public class NetworkManagerChess : NetworkManager
     public static event Action onClienConnected;
     public static event Action onClientDisconnected;
 
-    public int myNum;
-
     public List<RoomPlayer> RoomPlayers { get; } = new List<RoomPlayer>();
-    public List<GameObject> GamePlayers { get; } = new List<GameObject>();
+    public List<Player> GamePlayers { get; } = new List<Player>();
 
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
 
@@ -159,6 +157,7 @@ public class NetworkManagerChess : NetworkManager
                 //Transform start = spawns[index];
                 var conn = RoomPlayers[i].connectionToClient;
                 var gameplayerInstance = Instantiate(gamePlayerPrefab, spawnPos[i], spawnRot[i]);
+                GamePlayers.Add(gameplayerInstance);
                 gameplayerInstance.setDisplayName(RoomPlayers[i].DisplayName);
                 gameplayerInstance.playerNum = i + 1;
                 //DontDestroyOnLoad(gameplayerInstance);
@@ -167,6 +166,7 @@ public class NetworkManagerChess : NetworkManager
                 NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
                 boardManager.CmdAddPlayerReady();
             }
+            RoomPlayers.Clear();
             //boardManager.isFull = true;
         }
         base.ServerChangeScene(newSceneName);
@@ -183,8 +183,15 @@ public class NetworkManagerChess : NetworkManager
         conn.identity.GetComponent<Player>().CmdSpawnPieces(conn);
     }
 
+    public void InGameDisconnect()
+    {
+        GamePlayers.Clear();
+        SceneManager.SetActiveScene(SceneManager.GetSceneByPath(menuScene));
+    }
+
     public override void OnClientSceneChanged(NetworkConnection conn)
     {
+        onClientDisconnected += InGameDisconnect;
         conn.identity.GetComponent<Player>().setupCam();
         conn.identity.GetComponent<Player>().CmdSpawnPieces(conn.identity.connectionToClient);
        

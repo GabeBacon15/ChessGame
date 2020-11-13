@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
-public class MainMenu : MonoBehaviour
+public class MainMenu : NetworkBehaviour
 {
 
     [SerializeField] private InputField nameInputField = null;
@@ -24,6 +25,12 @@ public class MainMenu : MonoBehaviour
         landingPagePanel = GameObject.FindGameObjectWithTag("Main Menu");
         NetworkManagerChess.onClientDisconnected += disconnect;
         SetUpInputField();
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManagerChess.onClientDisconnected -= disconnect;
+        Debug.Log("hey");
     }
 
     public void SetUpInputField()
